@@ -5,10 +5,9 @@ Hearts::Hearts(sf::Vector2f fSize, sf::Vector2f fPos)
 {
     loadTextures();
     loadSounds();
-    Entity.setTexture(&heartTextures[HEARTS_COUNT]);
     Entity.setSize(fSize);
     Entity.setPosition(fPos);
-    iHearts = HEARTS_COUNT;
+    Reset();
 }
 
 Hearts::~Hearts()
@@ -33,6 +32,12 @@ void Hearts::loadSounds()
         sound.setBuffer(heartSound);
     } else
         std::cout << "(-) Failed to load sound loseheart.wav" << std::endl;
+}
+
+void Hearts::Reset()
+{
+    Entity.setTexture(&heartTextures[HEARTS_COUNT]);
+    iHearts = HEARTS_COUNT;
 }
 
 void Hearts::decHearts()

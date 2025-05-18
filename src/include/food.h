@@ -38,6 +38,8 @@ public:
     void Update();
     void Draw(sf::RenderWindow &window);
     void checkCollision(Player &player, Hearts &hearts, Score &score);
+
+    std::vector<struct food> food;
 private:
     void loadTextures();
     
@@ -48,6 +50,4 @@ private:
     bool bIsMoroccan[FOOD_COUNT];
     std::string textureFiles[FOOD_COUNT];
     sf::Vector2f windowSize;
-    
-    std::vector<struct food> food;
 };

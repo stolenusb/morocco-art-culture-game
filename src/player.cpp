@@ -1,6 +1,6 @@
 #include "player.h"
 
-Player::Player(sf::RenderWindow &window, sf::Vector2f entitySize, float moveSpeed, float jumpForce) :
+Player::Player(sf::RenderWindow &window, sf::Vector2f entitySize, float Scale, float moveSpeed, float jumpForce) :
     window(window),
     entitySize(entitySize),
     moveSpeed(moveSpeed),
@@ -10,9 +10,10 @@ Player::Player(sf::RenderWindow &window, sf::Vector2f entitySize, float moveSpee
     animation.loadTextures(PLAYER_ANIMS);
 
     // Initial player position
-    setPosition(50.f, 433.f);
+    resetPosition();
 
     Entity.setSize(entitySize);
+    Sprite.setScale(sf::Vector2f(Scale, Scale));
     Entity.setFillColor(sf::Color::Transparent);
     //For debug only:
     //Entity.setOutlineThickness(1.0f);
@@ -31,8 +32,11 @@ void Player::Update()
         Velocity.x = 0.f;
     
     Velocity.y += 9.8f;
-
-    animation.Set(PLAYER_IDLE, 8, sf::Vector2u(128, 128));
+    
+    if(!Dead)
+        animation.Set(PLAYER_IDLE, 8, sf::Vector2u(128, 128));
+    else
+        animation.Set(PLAYER_DEAD, 4, sf::Vector2u(128, 128));
 
     // Input
     Input();
@@ -46,8 +50,8 @@ void Player::Update()
 
 void Player::Input()
 {
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::R))
-        setPosition(50.f, 433.f);
+    if(Dead)
+        return;
     
     if(collider.bCollidingWithGround)
     {
@@ -65,21 +69,22 @@ void Player::Input()
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))) {
             animation.Set(PLAYER_RUN, 8, sf::Vector2u(128, 128));
-            Velocity.x *= 2.5f;
+            Velocity.x *= 1.9f;
         }
 
         if(!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q)))
             animation.Set(PLAYER_WALK, 7, sf::Vector2u(128, 128));
+        
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+            animation.Set(PLAYER_JUMP, 8, sf::Vector2u(128, 128));
+            Velocity.y -= jumpForce;
+            collider.bCollidingWithGround = false;
+        }
     }
 
-    else
+    else {
         animation.Set(PLAYER_JUMP, 8, sf::Vector2u(128, 128));
-}
-
-void Player::Jump()
-{
-    Velocity.y -= jumpForce;
-    collider.bCollidingWithGround = false;
+    }
 }
 
 void Player::Draw()
@@ -92,4 +97,13 @@ void Player::setPosition(float x, float y)
 {
     Entity.setPosition(x, y);
     Sprite.setPosition(x - entitySize.x, y - entitySize.y);
+}
+
+void Player::resetPosition()
+{
+    Velocity.x = 0.f;
+    Velocity.y = 0.f;
+    setPosition(float(window.getSize().x / 2) - entitySize.x, float(window.getSize().y / 2));
+    animation.stopAnim = false;
+    Dead = false;
 }

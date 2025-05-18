@@ -9,6 +9,7 @@ public:
     ~Score();
 
     void incScore();
+    void Reset();
 
     int iScore;
     sf::Text Entity;

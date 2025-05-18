@@ -9,24 +9,20 @@ enum PLAYER_ANIMATION_TEXTURES
     PLAYER_WALK,
     PLAYER_RUN,
     PLAYER_JUMP,
-    PLAYER_ATTACK,
-    PLAYER_PROJECTILE1,
-    PLAYER_PROJECTILE2,
+    PLAYER_DEAD,
     PLAYER_ANIMATION_COUNT
 };
 
-enum ENEMY_ANIMATION_TEXTURES
+enum DOG_ANIMATION_TEXTURES
 {
-    ENEMY_IDLE,
-    ENEMY_HURT,
-    ENEMY_ANIMATION_COUNT
+    DOG_BARK,
+    DOG_ANIMS_COUNT
 };
 
 enum ANIMATION_TEXTURES
 {
     PLAYER_ANIMS,
-    ENEMY_ANIMS,
-    PROJECTILE_ANIM
+    DOG_ANIMS
 };
 
 
@@ -38,7 +34,7 @@ public:
     void Set(unsigned int textureID, unsigned int imageCount, sf::Vector2u animationSize);
 
     bool lookRight =  true;
-
+    bool stopAnim = false;
 private:
     sf::Texture Texture[PLAYER_ANIMATION_COUNT];
     sf::IntRect textureRect;

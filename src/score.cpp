@@ -9,9 +9,9 @@ Score::Score(sf::Font &font, sf::Vector2f fPos)
     Entity.setPosition(sf::Vector2f(fPos));
     Entity.setCharacterSize(100);
     Entity.setFont(font);
-    Entity.setOutlineColor(sf::Color::White);
+    Entity.setOutlineColor(sf::Color::Black);
     Entity.setOutlineThickness(4.f);
-    Entity.setFillColor(sf::Color::Black);
+    Entity.setFillColor(sf::Color(255, 165, 0));
     Entity.setStyle(sf::Text::Bold);
     Entity.setLetterSpacing(1.5f);
     Entity.setString("x" + std::to_string(iScore));
@@ -19,6 +19,12 @@ Score::Score(sf::Font &font, sf::Vector2f fPos)
 
 Score::~Score()
 {
+}
+
+void Score::Reset()
+{
+    iScore = 0;
+    Entity.setString("x" + std::to_string(iScore));
 }
 
 void Score::incScore()

@@ -17,4 +17,5 @@ private:
     sf::RectangleShape &playerEntity;
     sf::Sprite &playerSprite;
     sf::Vector2f &playerVelocity;
+    sf::Vector2u windowSize;
 };

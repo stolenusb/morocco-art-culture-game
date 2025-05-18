@@ -1,6 +1,10 @@
 #include <iostream>
 #include <chrono>
 #include "food.h"
+#include <random>
+
+static std::random_device rd;
+static std::mt19937 gen(rd());
 
 std::string g_foodNames[FOOD_COUNT] = {
     "baghrir",
@@ -48,18 +52,21 @@ void Food::Add()
     addClock.restart();
 
     struct food added_food;
-    int randomNum = rand() % FOOD_COUNT;
+
+    std::uniform_int_distribution<> dist1(0, FOOD_COUNT - 1);
+    int randomNum = dist1(gen);
     added_food.bMoroccan = g_bMoroccan[randomNum];
     added_food.Entity.setTexture(&g_FoodTextures[randomNum]);
     added_food.Name.assign(g_foodNames[randomNum]);
 
-    int secRandomNum = rand() % int(windowSize.x);
+    std::uniform_int_distribution<> dist2(200, int(windowSize.x) - (250 + FOOD_SIZE_X));
+    int secRandomNum = dist2(gen);
     added_food.Entity.setPosition(secRandomNum, 0.f);
     added_food.Entity.setSize(sf::Vector2f(FOOD_SIZE_X, FOOD_SIZE_Y));
 
     food.push_back(added_food);
 
-    std::cout << "(*) Generated Food " << g_foodNames[randomNum] << ", Moroccan: " << (g_bMoroccan[randomNum] ? "true" : "false") << std::endl;
+    std::cout << "(*) Generated Food " << g_foodNames[randomNum] << ", Moroccan: " << (g_bMoroccan[randomNum] ? "true" : "false") << ", POS_X: " << std::to_string(secRandomNum) << std::endl;
 }
 
 void Food::checkCollision(Player &player, Hearts &hearts, Score &score)

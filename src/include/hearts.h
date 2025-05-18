@@ -2,7 +2,7 @@
 #include <SFML\Graphics.hpp>
 #include <SFML\Audio.hpp>
 
-#define HEARTS_COUNT 4
+#define HEARTS_COUNT 3
 class Hearts
 {
 public:
@@ -10,13 +10,14 @@ public:
     ~Hearts();
 
     void decHearts();
+    void Reset();
 
+    int iHearts;
+    
     sf::RectangleShape Entity;
 private:
     void loadTextures();
     void loadSounds();
-    
-    int iHearts;
     
     sf::Texture heartTextures[HEARTS_COUNT + 1];
     sf::SoundBuffer heartSound;
