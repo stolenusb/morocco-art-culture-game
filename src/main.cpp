@@ -54,6 +54,14 @@ int main()
     PlayButton.setStyle(sf::Text::Bold);
     PlayButton.setLetterSpacing(1.5f);
     PlayButton.setString("PLAY");
+
+    sf::Text Credits;
+    Credits.setPosition(sf::Vector2f(windowSize.x - 450.f, windowSize.y - 100.f));
+    Credits.setCharacterSize(70);
+    Credits.setFont(font);
+    Credits.setFillColor(sf::Color::White);
+    Credits.setLetterSpacing(1.5f);
+    Credits.setString("Walid Abaaqil");
     
         // ------- Player --------
     const float scale = 2.0f;
@@ -77,6 +85,7 @@ int main()
     Platform info("info.png", sf::Vector2f(200.f, 200.f), sf::Vector2f((windowSize.x / 2) - 110.f, (windowSize.y / 2) + 100.f));
     Platform leftWall("", sf::Vector2f(10.f, windowSize.y - 175.f), sf::Vector2f(0.f, 0.f));
     Platform rightWall("", sf::Vector2f(10.f, windowSize.y - 175.f), sf::Vector2f(windowSize.x - 10.f, 0.f));
+    Platform lost("lost.png", sf::Vector2f(487.5f, 391.5f), sf::Vector2f(40.f, (windowSize.y / 2) - 150.f));
 
     Hearts hearts(sf::Vector2f(400.f, 100.f), sf::Vector2f(windowSize.x - 380.f, windowSize.y - 140.f));
     Score score(font, sf::Vector2f(50.f, windowSize.y - 150.f));
@@ -98,10 +107,30 @@ int main()
     Timer.setLetterSpacing(1.5f);
     Timer.setString("00:" + std::to_string(remainingTime));
 
-        // ------ Music -------
+        // ------ Music & Sounds-------
     sf::Music music;
     if(!music.openFromFile("..\\..\\assets\\sound\\music.mp3"));
         std::cout << "(-) Failed to load music.mp3" << std::endl;
+    
+    music.setVolume(50.f);
+    
+    sf::SoundBuffer lostSoundBuffer;
+    sf::Sound lostSound;
+    if(lostSoundBuffer.loadFromFile("..\\..\\assets\\sound\\hchoma.wav")) {
+        std::cout << "(+) Loaded sound hchoma.wav"<< std::endl;
+        lostSound.setBuffer(lostSoundBuffer);
+    } else
+        std::cout << "(-) Failed to load sound hchoma.wav" << std::endl;
+    
+        // ----- Results Screen ------
+    sf::Text youLostText;
+    youLostText.setPosition(sf::Vector2f(sf::Vector2i((windowSize.x / 2) - 100, (windowSize.y/ 2) - 100)));
+    youLostText.setCharacterSize(180);
+    youLostText.setFont(font);
+    youLostText.setFillColor(sf::Color::Yellow);
+    youLostText.setStyle(sf::Text::Bold);
+    youLostText.setLetterSpacing(1.5f);
+    youLostText.setString("YOU LOST!");
 
     // ---------------------------------------------------- GAME LOOP -----------------------------------------------------------------
     while(window.isOpen())
@@ -142,11 +171,17 @@ int main()
             // Clearing frame
             window.clear(sf::Color::Black);
             window.draw(PlayButton);
+            window.draw(Credits);
             window.draw(info.Entity);
         }
 
         else if(iGameState == STATE_RESULTS) {
             window.clear(sf::Color::Black);
+
+            if(bLost) {
+                window.draw(lost.Entity);
+                window.draw(youLostText);
+            }
         }
 
         // Resume Game if Exited main menu
@@ -186,34 +221,36 @@ int main()
             window.draw(Dog);
             
             // ------------------- TIMER -----------------------
-            if(clock.getElapsedTime().asSeconds() >= 1.0f && remainingTime >= 0) {
-                if(remainingTime <= 0) {
-                    iGameState = STATE_RESULTS;
-                    music.stop();
-                } else {
-                    remainingTime--;
+            if(hearts.iHearts >= HEARTS_COUNT) {
+                if(clock.getElapsedTime().asSeconds() >= 1.0f && remainingTime >= 0) {
+                    if(remainingTime <= 0) {
+                        iGameState = STATE_RESULTS;
+                        music.stop();
+                    } else {
+                        remainingTime--;
 
-                    clock.restart();
-                    
-                    if(remainingTime >= 10)
-                        Timer.setString("00:" + std::to_string(remainingTime));
-                    else
-                        Timer.setString("00:0" + std::to_string(remainingTime));
+                        clock.restart();
+                        
+                        if(remainingTime >= 10)
+                            Timer.setString("00:" + std::to_string(remainingTime));
+                        else
+                            Timer.setString("00:0" + std::to_string(remainingTime));
 
-                    if(remainingTime == 10)
-                        Timer.setFillColor(sf::Color::Red);
+                        if(remainingTime == 10)
+                            Timer.setFillColor(sf::Color::Red);
+                    }
                 }
-            }
-
-            // ----- LOSE CHECK -----
-            if(hearts.iHearts <= 0) {
+            } else if(hearts.iHearts <= 0) {
+                if(!player.Dead)
+                    deadClock.restart();
+                
                 player.Dead = true;
                 bLost = true;
                 music.stop();
-
-                if(deadClock.getElapsedTime().asSeconds() < 3.0f) {
-                    deadClock.restart();
+                if(deadClock.getElapsedTime().asSeconds() >= 2.0f) {
                     iGameState = STATE_RESULTS;
+                    lostSound.play();
+                    deadClock.restart();
                 }
             }
         }
