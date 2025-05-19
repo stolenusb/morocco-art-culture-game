@@ -5,8 +5,8 @@
 #include "hearts.h"
 #include "score.h"
 
-#define FOOD_SIZE_X 64
-#define FOOD_SIZE_Y 64
+#define FOOD_SIZE_X 96
+#define FOOD_SIZE_Y 96
 enum FOOD_ENUM {
     FOOD_BAGHRIR,
     FOOD_CHEBAKIA,
@@ -18,6 +18,9 @@ enum FOOD_ENUM {
     FOOD_TAJINE,
     FOOD_TANGIA,
     FOOD_TEA,
+    FOOD_CROISSANT,
+    FOOD_PASTILLA,
+    FOOD_RFISSA,
     FOOD_COUNT
 };
 

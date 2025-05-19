@@ -76,15 +76,14 @@ void Player::Input()
             animation.Set(PLAYER_WALK, 7, sf::Vector2u(128, 128));
         
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-            animation.Set(PLAYER_JUMP, 8, sf::Vector2u(128, 128));
+            animation.Set(PLAYER_JUMP, 6, sf::Vector2u(128, 128));
             Velocity.y -= jumpForce;
             collider.bCollidingWithGround = false;
         }
     }
 
-    else {
-        animation.Set(PLAYER_JUMP, 8, sf::Vector2u(128, 128));
-    }
+    else
+        animation.Set(PLAYER_JUMP, 6, sf::Vector2u(128, 128));
 }
 
 void Player::Draw()

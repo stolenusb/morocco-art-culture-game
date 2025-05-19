@@ -16,7 +16,10 @@ std::string g_foodNames[FOOD_COUNT] = {
     "kebab",
     "noodles",
     "pizza",
-    "spaghetti"
+    "spaghetti",
+    "croissant",
+    "pastilla",
+    "rfissa"
 };
 
 sf::Texture g_FoodTextures[FOOD_COUNT];
@@ -31,7 +34,10 @@ bool g_bMoroccan[FOOD_COUNT] = {
     false,
     false,
     false,
-    false
+    false,
+    false,
+    true,
+    true
 };
 
 Food::Food(sf::Vector2f windowSize) :

@@ -70,6 +70,7 @@ int main()
     const sf::Vector2f entitySize = sf::Vector2f(42.f, 64.f);
 
     Player player(window, entitySize * scale, scale, moveSpeed * scale, jumpForce);
+
         // -------- Dog ----------
     sf::Sprite Dog;
     Dog.setPosition(sf::Vector2f(windowSize.x - 150, windowSize.y - (175.f + 48.f * 2.0f)));
@@ -79,6 +80,7 @@ int main()
     dogAnim.loadTextures(DOG_ANIMS);
     dogAnim.Set(DOG_BARK, 4, sf::Vector2u(48, 48));
     dogAnim.lookRight = false;
+
         // ------- Platforms -----
     Platform background("background.jpg", windowSize, sf::Vector2f(0.f, 0.f));
     Platform ground("ground.jpg", sf::Vector2f(windowSize.x, 175.f), sf::Vector2f(0.f, windowSize.y - 175.f));
@@ -87,10 +89,10 @@ int main()
     Platform rightWall("", sf::Vector2f(10.f, windowSize.y - 175.f), sf::Vector2f(windowSize.x - 10.f, 0.f));
     Platform lost("lost.png", sf::Vector2f(487.5f, 391.5f), sf::Vector2f(40.f, (windowSize.y / 2) - 150.f));
 
-    Hearts hearts(sf::Vector2f(400.f, 100.f), sf::Vector2f(windowSize.x - 380.f, windowSize.y - 140.f));
+    Hearts hearts(sf::Vector2f(400.f, 100.f), sf::Vector2f(windowSize.x - 385.f, windowSize.y - 140.f));
     Score score(font, sf::Vector2f(50.f, windowSize.y - 150.f));
+    
         // ------ Food -----
-
     Food food(windowSize);
 
         // ----- CountDown Timer -----
@@ -109,8 +111,10 @@ int main()
 
         // ------ Music & Sounds-------
     sf::Music music;
-    if(!music.openFromFile("..\\..\\assets\\sound\\music.mp3"));
+    if(!music.openFromFile("..\\..\\assets\\sound\\music.mp3"))
         std::cout << "(-) Failed to load music.mp3" << std::endl;
+    else
+        std::cout << "(+) Loaded music.mp3" << std::endl;
     
     music.setVolume(50.f);
     
@@ -122,6 +126,14 @@ int main()
     } else
         std::cout << "(-) Failed to load sound hchoma.wav" << std::endl;
     
+    sf::SoundBuffer winSoundBuffer;
+    sf::Sound winSound;
+    if(winSoundBuffer.loadFromFile("..\\..\\assets\\sound\\win.wav")) {
+        std::cout << "(+) Loaded sound win.wav"<< std::endl;
+        winSound.setBuffer(winSoundBuffer);
+    } else
+        std::cout << "(-) Failed to load sound win.wav" << std::endl;
+    
         // ----- Results Screen ------
     sf::Text youLostText;
     youLostText.setPosition(sf::Vector2f(sf::Vector2i((windowSize.x / 2) - 100, (windowSize.y/ 2) - 100)));
@@ -131,6 +143,15 @@ int main()
     youLostText.setStyle(sf::Text::Bold);
     youLostText.setLetterSpacing(1.5f);
     youLostText.setString("YOU LOST!");
+
+    sf::Text youWinText;
+    youWinText.setPosition(sf::Vector2f(sf::Vector2i((windowSize.x / 2) - 310, (windowSize.y/ 2) - 125)));
+    youWinText.setCharacterSize(180);
+    youWinText.setFont(font);
+    youWinText.setFillColor(sf::Color(255, 165, 0));
+    youWinText.setStyle(sf::Text::Bold);
+    youWinText.setLetterSpacing(1.5f);
+    youWinText.setString("YOU LOST!");
 
     // ---------------------------------------------------- GAME LOOP -----------------------------------------------------------------
     while(window.isOpen())
@@ -181,6 +202,9 @@ int main()
             if(bLost) {
                 window.draw(lost.Entity);
                 window.draw(youLostText);
+            } else {
+                youWinText.setString("SCORE: " + std::to_string(score.iScore));
+                window.draw(youWinText);
             }
         }
 
@@ -220,15 +244,16 @@ int main()
 
             window.draw(Dog);
             
-            // ------------------- TIMER -----------------------
-            if(hearts.iHearts >= HEARTS_COUNT) {
+            // ------------------- GAME LIFE -----------------------
+            if(hearts.iHearts > 0) { // ------ ALIVE ------
+                // ------ TIMER ------
                 if(clock.getElapsedTime().asSeconds() >= 1.0f && remainingTime >= 0) {
                     if(remainingTime <= 0) {
                         iGameState = STATE_RESULTS;
+                        winSound.play();
                         music.stop();
                     } else {
                         remainingTime--;
-
                         clock.restart();
                         
                         if(remainingTime >= 10)
@@ -236,11 +261,11 @@ int main()
                         else
                             Timer.setString("00:0" + std::to_string(remainingTime));
 
-                        if(remainingTime == 10)
+                        if(remainingTime <= 10)
                             Timer.setFillColor(sf::Color::Red);
                     }
                 }
-            } else if(hearts.iHearts <= 0) {
+            } else { // ------ DEAD ------
                 if(!player.Dead)
                     deadClock.restart();
                 
