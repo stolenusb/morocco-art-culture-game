@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.28)
 project(GameProject VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(GIT_EXECUTABLE "C:/Dev/prerequisites/MSYS2/usr/bin/git.exe")
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 include(FetchContent)

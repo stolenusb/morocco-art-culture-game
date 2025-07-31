@@ -46,22 +46,22 @@ int main()
     if(!font.loadFromFile("..\\..\\assets\\font\\dynamictrooper.ttf"))
         std::cout << "(-) Failed to load font" << std::endl;
     
-    sf::Vector2i PlayButtonPos(sf::Vector2i((windowSize.x / 2) - 200, (windowSize.y/ 2) - 200));
+    sf::Vector2i PlayButtonPos(sf::Vector2i((windowSize.x / 2) - 120, (windowSize.y/ 2) - 120));
     PlayButton.setPosition(sf::Vector2f(PlayButtonPos));
-    PlayButton.setCharacterSize(200);
+    PlayButton.setCharacterSize(120);
     PlayButton.setFont(font);
     PlayButton.setFillColor(sf::Color::Magenta);
-    PlayButton.setStyle(sf::Text::Bold);
+    //PlayButton.setStyle(sf::Text::Bold);
     PlayButton.setLetterSpacing(1.5f);
     PlayButton.setString("PLAY");
 
-    sf::Text Credits;
-    Credits.setPosition(sf::Vector2f(windowSize.x - 450.f, windowSize.y - 100.f));
-    Credits.setCharacterSize(70);
-    Credits.setFont(font);
-    Credits.setFillColor(sf::Color::White);
-    Credits.setLetterSpacing(1.5f);
-    Credits.setString("Walid Abaaqil");
+    sf::Text GameTitle;
+    GameTitle.setPosition(sf::Vector2f(50.f, 30.f));
+    GameTitle.setCharacterSize(150);
+    GameTitle.setFont(font);
+    GameTitle.setFillColor(sf::Color::White);
+    GameTitle.setLetterSpacing(1.5f);
+    GameTitle.setString("Art & Culture Game");
     
         // ------- Player --------
     const float scale = 2.0f;
@@ -165,8 +165,8 @@ int main()
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && iGameState == STATE_PLAY)
                 iGameState = STATE_MAINSCREEN;
             
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::R) /*&& iGameState == STATE_PLAY*/) {
-                iGameState = STATE_PLAY; // REMOVE
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+                iGameState = STATE_PLAY;
                 music.stop();
                 music.play();
                 restartGame(player, food, hearts, score, Timer);
@@ -176,8 +176,8 @@ int main()
         // Load Main Menu
         if(iGameState == STATE_MAINSCREEN) { 
             // If Mouse position on play button.
-            if(     sf::Mouse::getPosition(window).x >= PlayButtonPos.x && sf::Mouse::getPosition(window).x <= (PlayButtonPos.x + 400.f) &&
-                    sf::Mouse::getPosition(window).y >= PlayButtonPos.y && sf::Mouse::getPosition(window).y <= (PlayButtonPos.y + 200.f)    )
+            if(     sf::Mouse::getPosition(window).x >= PlayButtonPos.x && sf::Mouse::getPosition(window).x <= (PlayButtonPos.x + 240.f) &&
+                    sf::Mouse::getPosition(window).y >= PlayButtonPos.y && sf::Mouse::getPosition(window).y <= (PlayButtonPos.y + 120.f)    )
             {
                 music.pause();
                 PlayButton.setFillColor(sf::Color::Red);
@@ -192,7 +192,8 @@ int main()
             // Clearing frame
             window.clear(sf::Color::Black);
             window.draw(PlayButton);
-            window.draw(Credits);
+            window.draw(GameTitle);
+            window.draw(GameTitle);
             window.draw(info.Entity);
         }
 

@@ -61,18 +61,18 @@ void Player::Input()
             Velocity.x = moveSpeed;
         }
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
             animation.lookRight = false;
 
             Velocity.x = -moveSpeed;
         }
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))) {
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::A))) {
             animation.Set(PLAYER_RUN, 8, sf::Vector2u(128, 128));
             Velocity.x *= 1.9f;
         }
 
-        if(!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q)))
+        if(!sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::A)))
             animation.Set(PLAYER_WALK, 7, sf::Vector2u(128, 128));
         
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
